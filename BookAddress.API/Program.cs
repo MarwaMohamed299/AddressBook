@@ -1,13 +1,18 @@
 using BookAddess.DAL.Context;
+using BookAddess.DAL.Entities.Models;
 using BookAddess.DAL.Repos.BookAddesses;
 using BookAddess.DAL.Repos.Departments;
 using BookAddess.DAL.Repos.Jobs;
+using BookAddress.BL.Managers.UsersManager;
 using BookAddress.BL.Services.BookAddressesManager;
 using BookAddress.BL.Services.DepartmentsManager;
 using BookAddress.BL.Services.FileService;
 using BookAddress.BL.Services.JobsManager;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,43 +51,49 @@ try
 
     #endregion
 
-    //#region Authentication
 
-    //builder.Services.AddAuthentication(options =>
-    //{
-    //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    //})
-    //.AddJwtBearer(options =>
-    //{
-    //    options.Authority = builder.Configuration["JwtSettings:Authority"];
-    //    options.Audience = builder.Configuration["JwtSettings:Audience"];
+    #region Identity
 
-    //    var keyString = builder.Configuration["JwtSettings:Key"];
-    //    var keyInBytes = Encoding.UTF8.GetBytes(keyString!);
-    //    var key = new SymmetricSecurityKey(keyInBytes);
-    //    options.TokenValidationParameters = new TokenValidationParameters
-    //    {
-    //        ValidateIssuer = false,
-    //        ValidateAudience = false,
-    //        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-    //        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-    //        IssuerSigningKey = key
-    //    };
-    //});
+    builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+    {
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 5;
+        options.User.RequireUniqueEmail = true;
+        options.Lockout.MaxFailedAccessAttempts = 3;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+    })
+        .AddEntityFrameworkStores<BookAddressContext>()
+        .AddDefaultTokenProviders();
+
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = "default";
+        options.DefaultScheme = "default";
+        options.DefaultChallengeScheme = "default";
+    })
+
+    .AddJwtBearer("default", options =>
+    {
+        //GenerateKey
+
+        var secretKey = builder.Configuration.GetValue<string>("SecretKey");
+        var secretKeyInBytes = Encoding.ASCII.GetBytes(secretKey!);
+        var Key = new SymmetricSecurityKey(secretKeyInBytes);
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            IssuerSigningKey = Key
+
+        };
+    });
 
 
-    //#endregion
+    #endregion
 
-    //#region Global Services
-
-    //builder.Services.AddLocalization(options
-    //    => options.ResourcesPath = "Resources/ResourcesFiles");
-    //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
-
-    //#endregion
 
     #region Add Cors
 
@@ -98,6 +109,7 @@ try
 
     #endregion
 
+
     #region DI
 
     builder.Services.AddScoped<IJobRepo, JobRepo>();
@@ -108,6 +120,8 @@ try
     builder.Services.AddScoped<IJobManager, JobManager>();
     builder.Services.AddScoped<IDepartmentManager, DepartmentManager>();
     builder.Services.AddScoped<IBookAddressManager, BookAddressManager>();
+    builder.Services.AddScoped<IUserManager, UserManager>();
+
     builder.Services.AddScoped<IFileService, FileService>();
 
     #endregion
@@ -132,6 +146,7 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthentication();
+
     app.UseAuthorization();
 
     app.MapControllers();
