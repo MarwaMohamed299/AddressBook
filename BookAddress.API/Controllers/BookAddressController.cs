@@ -51,10 +51,18 @@ namespace BookAddress.API.Controllers
 
         [HttpGet("search")]
         public async Task<IActionResult> Search(
-            [FromQuery] string searchTerm,
-            [FromQuery] DateOnly? birthDateFrom,
-            [FromQuery] DateOnly? birthDateTo)
-            => Ok(await _manager.SearchAsync(searchTerm, birthDateFrom, birthDateTo));
+        [FromQuery] string? fullName = null,
+        [FromQuery] string? mobileNumber = null,
+        [FromQuery] string? email = null,
+        [FromQuery] string? address = null,
+        [FromQuery] DateOnly? birthDateFrom = null,
+        [FromQuery] DateOnly? birthDateTo = null,
+        [FromQuery] Guid? jobId = null,
+        [FromQuery] Guid? departmentId = null,
+        [FromQuery] int? age = null)
+        => Ok(await _manager.SearchAsync(
+            fullName, mobileNumber, email, address,
+            birthDateFrom, birthDateTo, jobId, departmentId, age));
     }
 }
 

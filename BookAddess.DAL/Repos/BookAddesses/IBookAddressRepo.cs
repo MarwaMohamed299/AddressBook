@@ -12,8 +12,14 @@ namespace BookAddess.DAL.Repos.BookAddesses
         Task<bool> DeleteAsync(Guid id);
 
         Task<IEnumerable<AddressBook>> SearchAsync(
-            string searchTerm,
-            DateOnly? birthDateFrom = null,
-            DateOnly? birthDateTo = null);
+        string fullName = null,
+        string mobileNumber = null,
+        string email = null,
+        string address = null,
+        DateOnly? birthDateFrom = null,
+        DateOnly? birthDateTo = null,
+        Guid? jobId = null,
+        Guid? departmentId = null,
+        int? age = null);
     }
 }

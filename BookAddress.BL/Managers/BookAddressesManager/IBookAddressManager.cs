@@ -1,4 +1,5 @@
-﻿using BookAddress.BL.DTOs.BookAddressDTOs;
+﻿using BookAddess.DAL.Entities.Models;
+using BookAddress.BL.DTOs.BookAddressDTOs;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,15 @@ namespace BookAddress.BL.Services.BookAddressesManager
         Task<AddressBookReadDto> UpdateAsync(Guid id, BookAddressCreateUpdateDto dto);
         Task<bool> DeleteAsync(Guid id);
         Task<IEnumerable<AddressBookReadDto>> SearchAsync(
-            string searchTerm,
-            DateOnly? birthDateFrom = null,
-            DateOnly? birthDateTo = null);
-        Task<FileResult>  ExportBookAddressInExcelFiles();
+           string fullName = null,
+           string mobileNumber = null,
+           string email = null,
+           string address = null,
+           DateOnly? birthDateFrom = null,
+           DateOnly? birthDateTo = null,
+           Guid? jobId = null,
+           Guid? departmentId = null,
+           int? age = null); 
+        Task<FileResult> ExportBookAddressInExcelFiles();
     }
 }

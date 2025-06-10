@@ -1,4 +1,5 @@
-﻿using BookAddess.DAL.Context;
+﻿using Azure;
+using BookAddess.DAL.Context;
 using BookAddess.DAL.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,7 +32,7 @@ namespace BookAddess.DAL.Repos.BookAddesses
             return await _context.AddressBooks
                 .Include(a => a.Job)
                 .Include(a => a.Department)
-                .FirstOrDefaultAsync(a => a.Id == id); 
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<AddressBook> AddAsync(AddressBook addressBook)
@@ -59,23 +60,32 @@ namespace BookAddess.DAL.Repos.BookAddesses
         }
 
         public async Task<IEnumerable<AddressBook>> SearchAsync(
-            string searchTerm,
-            DateOnly? birthDateFrom = null,
-            DateOnly? birthDateTo = null)
+        string fullName = null,
+        string mobileNumber = null,
+        string email = null,
+        string address = null,
+        DateOnly? birthDateFrom = null,
+        DateOnly? birthDateTo = null,
+        Guid? jobId = null,
+        Guid? departmentId = null,
+        int? age = null)
         {
             var query = _context.AddressBooks
                 .Include(a => a.Job)
                 .Include(a => a.Department)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                query = query.Where(a =>
-                    a.FullName.Contains(searchTerm) ||
-                    a.MobileNumber.Contains(searchTerm) ||
-                    a.Email.Contains(searchTerm) ||
-                    a.Address.Contains(searchTerm));
-            }
+            if (!string.IsNullOrWhiteSpace(fullName))
+                query = query.Where(a => a.FullName.Contains(fullName));
+
+            if (!string.IsNullOrWhiteSpace(mobileNumber))
+                query = query.Where(a => a.MobileNumber.Contains(mobileNumber));
+
+            if (!string.IsNullOrWhiteSpace(email))
+                query = query.Where(a => a.Email.Contains(email));
+
+            if (!string.IsNullOrWhiteSpace(address))
+                query = query.Where(a => a.Address.Contains(address));
 
             if (birthDateFrom.HasValue)
                 query = query.Where(a => a.DateOfBirth >= birthDateFrom.Value);
@@ -83,7 +93,27 @@ namespace BookAddess.DAL.Repos.BookAddesses
             if (birthDateTo.HasValue)
                 query = query.Where(a => a.DateOfBirth <= birthDateTo.Value);
 
+            if (jobId.HasValue)
+                query = query.Where(a => a.JobId == jobId.Value);
+
+            if (departmentId.HasValue)
+                query = query.Where(a => a.DepartmentId == departmentId.Value);
+
+            if (age.HasValue)
+            {
+                var today = DateTime.Today;
+                var dateFrom = DateOnly.FromDateTime(today.AddYears(-age.Value - 1).AddDays(1));
+                var dateTo = DateOnly.FromDateTime(today.AddYears(-age.Value));
+
+                Console.WriteLine($"Searching age {age}");
+                Console.WriteLine($"Date Range: {dateFrom} to {dateTo}");
+
+                query = query.Where(a => a.DateOfBirth >= dateFrom && a.DateOfBirth <= dateTo);
+            }
+
+
             return await query.ToListAsync();
+
         }
     }
 }

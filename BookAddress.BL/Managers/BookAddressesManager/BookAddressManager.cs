@@ -35,14 +35,17 @@ namespace BookAddress.BL.Services.BookAddressesManager
 
         public async Task<AddressBookReadDto> AddAsync(BookAddressCreateUpdateDto dto)
         {
+            if (dto.DateOfBirth > DateOnly.FromDateTime(DateTime.Today))
+            {
+                throw new ArgumentException("Date of birth cannot be in the future.");
+            }
+
             string photoPath = null!;
             if (dto.Photo != null)
             {
                 photoPath = await _fileService.UploadPhotoAsync(dto.Photo);
             }
 
-            Console.WriteLine($"Received DepartmentId: {dto.DepartmentId}");
-            Console.WriteLine($"Received JobId: {dto.JobId}");
             var entity = new AddressBook
             {
                 FullName = dto.FullName,
@@ -102,13 +105,19 @@ namespace BookAddress.BL.Services.BookAddressesManager
 
         #region Search 
         public async Task<IEnumerable<AddressBookReadDto>> SearchAsync(
-            string searchTerm,
+            string fullName = null,
+            string mobileNumber = null,
+            string email = null,
+            string address = null,
             DateOnly? birthDateFrom = null,
-            DateOnly? birthDateTo = null)
-        {
-            var entities = await _repo.SearchAsync(searchTerm, birthDateFrom, birthDateTo);
-            return entities.Select(MapToDto);
-        }
+            DateOnly? birthDateTo = null,
+            Guid? jobId = null,
+            Guid? departmentId = null,
+            int? age = null)
+            {
+                var entities = await _repo.SearchAsync(fullName,mobileNumber,email,address, birthDateFrom, birthDateTo ,jobId,departmentId , age);
+                return entities.Select(MapToDto);
+            }
         #endregion
 
         #region Mapping
@@ -125,6 +134,9 @@ namespace BookAddress.BL.Services.BookAddressesManager
                 PhotoPath = entity.PhotoPath,
                 JobId = entity.JobId,
                 DepartmentId = entity.DepartmentId,
+                DepartmentName = entity.Department?.Name,
+                JobName = entity.Job?.Name,
+                Age = CalculateAge(entity.DateOfBirth)
             };
         }
 
