@@ -19,7 +19,6 @@ namespace BookAddress.BL.DTOs.BookAddressDTOs
 
         public Guid DepartmentId { get; set; }
 
-        public Guid UserId { get; set; }
 
     }
 }

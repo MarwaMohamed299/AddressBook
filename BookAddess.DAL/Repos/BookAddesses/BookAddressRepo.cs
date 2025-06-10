@@ -23,7 +23,6 @@ namespace BookAddess.DAL.Repos.BookAddesses
             return await _context.AddressBooks
                 .Include(a => a.Job)
                 .Include(a => a.Department)
-                .Include(a => a.CreatedBy)
                 .ToListAsync();
         }
 
@@ -32,7 +31,6 @@ namespace BookAddess.DAL.Repos.BookAddesses
             return await _context.AddressBooks
                 .Include(a => a.Job)
                 .Include(a => a.Department)
-                .Include(a => a.CreatedBy)
                 .FirstOrDefaultAsync(a => a.Id == id); 
         }
 
@@ -68,7 +66,6 @@ namespace BookAddess.DAL.Repos.BookAddesses
             var query = _context.AddressBooks
                 .Include(a => a.Job)
                 .Include(a => a.Department)
-                .Include(a => a.CreatedBy)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))

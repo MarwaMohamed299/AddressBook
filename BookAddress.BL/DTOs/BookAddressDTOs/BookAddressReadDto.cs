@@ -16,12 +16,7 @@ namespace BookAddress.BL.DTOs.BookAddressDTOs
         public string? Email { get; set; }
         public string? PhotoPath { get; set; }
         public Guid JobId { get; set; }
-        public string? JobName { get; set; }
-
         public Guid DepartmentId { get; set; }
-        public string? DepartmentName { get; set; }
-
-        public Guid UserId { get; set; }
 
 
     }

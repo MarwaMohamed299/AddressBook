@@ -22,7 +22,7 @@ namespace BookAddess.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BookAddess.DAL.Entities.AddressBook", b =>
+            modelBuilder.Entity("BookAddess.DAL.Entities.Models.AddressBook", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,21 +52,16 @@ namespace BookAddess.DAL.Migrations
                     b.Property<string>("PhotoPath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("JobId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("AddressBooks");
                 });
 
-            modelBuilder.Entity("BookAddess.DAL.Entities.Department", b =>
+            modelBuilder.Entity("BookAddess.DAL.Entities.Models.Department", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,7 +75,7 @@ namespace BookAddess.DAL.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("BookAddess.DAL.Entities.Job", b =>
+            modelBuilder.Entity("BookAddess.DAL.Entities.Models.Job", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,7 +89,7 @@ namespace BookAddess.DAL.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("BookAddess.DAL.Entities.User", b =>
+            modelBuilder.Entity("BookAddess.DAL.Entities.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -291,27 +286,19 @@ namespace BookAddess.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BookAddess.DAL.Entities.AddressBook", b =>
+            modelBuilder.Entity("BookAddess.DAL.Entities.Models.AddressBook", b =>
                 {
-                    b.HasOne("BookAddess.DAL.Entities.Department", "Department")
+                    b.HasOne("BookAddess.DAL.Entities.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookAddess.DAL.Entities.Job", "Job")
+                    b.HasOne("BookAddess.DAL.Entities.Models.Job", "Job")
                         .WithMany()
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BookAddess.DAL.Entities.User", "CreatedBy")
-                        .WithMany("AddressBooks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
 
                     b.Navigation("Department");
 
@@ -329,7 +316,7 @@ namespace BookAddess.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("BookAddess.DAL.Entities.User", null)
+                    b.HasOne("BookAddess.DAL.Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -338,7 +325,7 @@ namespace BookAddess.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("BookAddess.DAL.Entities.User", null)
+                    b.HasOne("BookAddess.DAL.Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -353,7 +340,7 @@ namespace BookAddess.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookAddess.DAL.Entities.User", null)
+                    b.HasOne("BookAddess.DAL.Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -362,16 +349,11 @@ namespace BookAddess.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("BookAddess.DAL.Entities.User", null)
+                    b.HasOne("BookAddess.DAL.Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BookAddess.DAL.Entities.User", b =>
-                {
-                    b.Navigation("AddressBooks");
                 });
 #pragma warning restore 612, 618
         }

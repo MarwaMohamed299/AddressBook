@@ -38,10 +38,7 @@ namespace BookAddess.DAL.Context
                 .WithMany()
                 .HasForeignKey(a => a.DepartmentId);
 
-            modelBuilder.Entity<AddressBook>()
-                .HasOne(a => a.CreatedBy)
-                .WithMany(u => u.AddressBooks) 
-                .HasForeignKey(a => a.UserId);
+           
         }
     
     }

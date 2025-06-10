@@ -41,6 +41,8 @@ namespace BookAddress.BL.Services.BookAddressesManager
                 photoPath = await _fileService.UploadPhotoAsync(dto.Photo);
             }
 
+            Console.WriteLine($"Received DepartmentId: {dto.DepartmentId}");
+            Console.WriteLine($"Received JobId: {dto.JobId}");
             var entity = new AddressBook
             {
                 FullName = dto.FullName,
@@ -51,7 +53,6 @@ namespace BookAddress.BL.Services.BookAddressesManager
                 PhotoPath = photoPath, 
                 JobId = dto.JobId,
                 DepartmentId = dto.DepartmentId,
-                UserId = dto.UserId
             };
 
             var result = await _repo.AddAsync(entity);
@@ -85,7 +86,6 @@ namespace BookAddress.BL.Services.BookAddressesManager
             entity.Email = dto.Email;
             entity.JobId = dto.JobId;
             entity.DepartmentId = dto.DepartmentId;
-            entity.UserId = dto.UserId;
 
             var updated = await _repo.UpdateAsync(entity);
 
@@ -124,10 +124,7 @@ namespace BookAddress.BL.Services.BookAddressesManager
                 Email = entity.Email,
                 PhotoPath = entity.PhotoPath,
                 JobId = entity.JobId,
-                JobName = entity.Job?.Name,
                 DepartmentId = entity.DepartmentId,
-                DepartmentName = entity.Department?.Name,
-                UserId = entity.UserId
             };
         }
 
@@ -182,7 +179,6 @@ namespace BookAddress.BL.Services.BookAddressesManager
                 worksheet.Cells[row, 10].Value = entry.Job?.Name;
                 worksheet.Cells[row, 11].Value = entry.DepartmentId;
                 worksheet.Cells[row, 12].Value = entry.Department?.Name;
-                worksheet.Cells[row, 13].Value = entry.UserId;
                 row++;
             }
 
