@@ -17,13 +17,7 @@ namespace BookAddess.DAL.Context
         {
             
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        //{
-        //    builder.LogTo((query) =>
-        //    {
-        //        File.AppendAllText("Queries.sql", $"\n{query}");
-        //    }).EnableSensitiveDataLogging();
-        //}
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

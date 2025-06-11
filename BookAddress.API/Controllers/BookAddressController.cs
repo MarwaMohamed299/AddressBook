@@ -39,7 +39,7 @@ namespace BookAddress.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] BookAddressCreateUpdateDto dto)
+        public async Task<IActionResult> Update(Guid id, [FromForm] BookAddressCreateUpdateDto dto)
         {
             var result = await _manager.UpdateAsync(id, dto);
             return result == null ? NotFound() : Ok(result);

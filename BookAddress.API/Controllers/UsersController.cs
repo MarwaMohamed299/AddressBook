@@ -18,14 +18,14 @@ namespace BookAddress.API.Controllers
         }
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult> Register(RegisterDto userDto)
+        public async Task<ActionResult> Register([FromBody] RegisterDto userDto)
         {
             var result = await _userManager.Register(userDto);
             return Ok(result);
         }
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<LogInResultDto>> Login(LogInDto credentials)
+        public async Task<ActionResult<LogInResultDto>> Login([FromBody] LogInDto credentials)
         {
             var result = await _userManager.LogIn(credentials);
             return Ok(result);
