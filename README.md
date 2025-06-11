@@ -55,3 +55,9 @@ dotnet run
 📬 Input Validations – Built-in server-side validations on Email and Phone Number fields.
 
 🛠️ Serilog Integration – Structured and file-based logging using Serilog for better diagnostics and debugging.
+
+📤 File Upload – Upload and store profile photos for each address entry.
+
+📊 Export to Excel – Export address book data to a downloadable Excel file.
+
+
