@@ -42,7 +42,7 @@ dotnet run
 
 # Features
 
-✅ N-Tier Architecture – Clean separation of concerns using layered architecture (API, Application, Domain, Infrastructure).
+✅ N-Tier Architecture – Clean separation of concerns using layered architecture (API,BusinessLayer , DataAcessLayer).
 
 🔐 JWT Authentication – Secure authentication using JSON Web Tokens for protected endpoints.
 
